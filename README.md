@@ -3,7 +3,7 @@
     <picture>
       <source media="(prefers-color-scheme: dark)" srcset="assets/images/stock/pantera-1.4.png">
       <source media="(prefers-color-scheme: light)" srcset="assets/images/stock/pantera-1.3.png">
-      <img src="assets/images/stock/pantera-1.4.png" alt="Logo of X" width="350px">
+      <img src="assets/images/stock/pantera-1.4.png" alt="Logo of Pantera" width="350px">
     </picture>
   </div>
 
@@ -56,88 +56,7 @@ Throughout this project, I will be adding to and adjusting my documentation as n
 - [Proxmox](https://www.proxmox.com/en/)
 - 
 
-## Installation and configuration
-Before I actually began the project, I wanted to install and configure all the necessary software, ISO files, etc., so that everything was ready for the CSL. The goal was to prepare everything in advance and save time during the different stages of the project.
 
-### Proxmox
-For the Proxmox installation and configuration, I used the [documentation](https://www.proxmox.com/en/proxmox-virtual-environment/get-started) provided by Proxmox themselves and followed it step by step. Keep in mind to read carefully and not just click through—take the time to understand each step.
-
-<br>
-
-> [!CAUTION]
-> Installing the Proxmox ISO Installer will permanently overwrite the disk it is installed on, as it is a bare-metal installer. This means that any existing data will be permanently removed. Proceed with caution!
-
-<br>
-
-You should be able to install it on your own, as the documentation is quite clear. Here are the steps I followed for the installation:
-
-- Download the Proxmox ISO image installer (*in my case the 8.2-2 version*)
-- Download [Rufus](https://rufus.ie/de/) or another USB burning tool
-- Burn the Proxmox ISO onto a USB drive with at least 8GB of free space
-- I used my old laptop to boot Proxmox from the USB drive --> BIOS
-- Proceed with the Proxmox installation
-
-<br>
-
-> [!WARNING]  
-> As mentioned earlier, burning this disk with the Proxmox ISO file will permanently erase **ALL DATA** on the selected disk!
-
-
-<h4>Rufus Setup</h4>
-<div style="display: flex; justify-content: space-between;">
-  <img src="assets/images/rufus-1.png" alt="Rufus 1" style="width: 45%;" />
-  <img src="assets/images/rufus-2.png" alt="Rufus 2" style="width: 45%;" />
-</div>
-
-<br>
-
-<h4>Proxmox Booting via USB Drive - 1st Attempt</h4>
-<div style="display: flex; justify-content: space-between;">
-  <img src="assets/images/boot-proxmox1.jpg" alt="BIOS boot proxmox" style="width: 45%;" />
-  <img src="assets/images/boot-proxmox22.jpg" alt="BIOS boot proxmox success" style="width: 45%;" />
-</div>
-
-<br>
-
-I proceeded with the installation and setup of Proxmox on my Acer laptop but encountered several issues. When I attempted to apply the configurations I had made, an error kept occurring despite my various attempts to fix it. The root of the problem was that the Proxmox installer had difficulties with the laptop's partition. I tried multiple solutions, but unfortunately, none were successful.
-
-To keep a long story short, the real reason Proxmox had issues with my laptop’s partition was that the eMMC itself was damaged or faulty.
-
-If you’d like to read through my troubleshooting process, you can find all the documentation in the ***troubleshooting folder*** or [here](troubleshooting/TS-proxmox-laptop-issue.md).
-
-<br>
-
-> [!TIP]  
-> My ACER Switch Alpha 12 came with eMMC (embedded MultiMediaCard) storage, commonly found in budget devices due to its low cost. While eMMCs work for basic tasks, they lack the speed and durability needed for more demanding use. A better option is an SSD, which offers faster performance and greater reliability, making it ideal for long-term, intensive tasks.
-
-<br>
-
-
-
-<br>
-<br>
-<br>
-<br>
-
-### Test 123
-> [!NOTE]  
-> Highlights information that users should take into account, even when skimming.
-
-> [!TIP]
-> Optional information to help a user be more successful.
-
-> [!IMPORTANT]  
-> Crucial information necessary for users to succeed.
-
-> [!WARNING]  
-> Critical content demanding immediate user attention due to potential risks.
-
-> [!CAUTION]
-> Negative potential consequences of an action.
-
-#### Test 321
-
-##### Test 123321
 
 # Sources
 
