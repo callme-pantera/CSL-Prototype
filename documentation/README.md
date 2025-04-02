@@ -1,9 +1,9 @@
 <div align="center">
   <div style="text-align: center;">
     <picture>
-      <source media="(prefers-color-scheme: dark)" srcset="assets/images/stock/pantera-1.4.png">
-      <source media="(prefers-color-scheme: light)" srcset="assets/images/stock/pantera-1.3.png">
-      <img src="assets/images/stock/pantera-1.4.png" alt="Logo of Pantera" width="350px">
+      <source media="(prefers-color-scheme: dark)" srcset="/assets/images/stock/pantera-1.4.png">
+      <source media="(prefers-color-scheme: light)" srcset="/assets/images/stock/pantera-1.3.png">
+      <img src="/assets/images/stock/pantera-1.4.png" alt="Logo of Pantera" width="350px">
     </picture>
   </div>
 
