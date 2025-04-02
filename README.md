@@ -22,6 +22,8 @@ In this project, I will document the process of creating a **C**yber**s**ecurity
 <br><br>
 This is not a tutorial or guide, just a documentation of my work and progress, the way I approach it.
 I want to mention that you don’t have to follow every step exactly as I did. I’ll be documenting everything, including some details that may not be strictly necessary.
+<br><br>
+The documentation of the whole project can be found [here](documentation/README.md) or in the **documentation** folder at the top of the page.
 
 <br>
 
@@ -30,12 +32,14 @@ I want to mention that you don’t have to follow every step exactly as I did. I
 
 <br>
 
-# Concept
+## Concept
 Before starting, I created a prototype of the network plan using [Draw.io](https://app.diagrams.net/). The goal was to visualize my ideas and ensure that everything could be connected logically. I didn’t focus much on design, as I wanted to confirm the plan’s feasibility before refining its appearance.
 
 These are some of the points I wanted to include in my Cybersecurity Lab:
 
 - Containers
+- VMs
+- Testing Environment
 - Kali Linux
 - Firewall / monitoring tools
 - Private network for protection from external threats
@@ -45,13 +49,11 @@ These are some of the points I wanted to include in my Cybersecurity Lab:
 
 <br>
 
-| network plan - draw.io |
-|:--------------------------------------------------:|
-|![network plan CSL](assets/images/CSL-network-plan.png)|
+![network plan CSL](/assets/images/CSL-network-plan.png)
 
 <br>
 
-# What do you need?
+## What do you need?
 Throughout this project, I will be adding to and adjusting my documentation as needed. For now, here are the essential components you'll need:
 - [Proxmox](https://www.proxmox.com/en/)
 - 
