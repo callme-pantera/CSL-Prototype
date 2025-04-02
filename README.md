@@ -23,7 +23,8 @@ In this project, I will document the process of creating a **C**yber**s**ecurity
 This is not a tutorial or guide, just a documentation of my work and progress, the way I approach it.
 I want to mention that you don’t have to follow every step exactly as I did. I’ll be documenting everything, including some details that may not be strictly necessary.
 <br><br>
-The documentation of the whole project can be found [here](documentation/README.md) or in the **documentation** folder at the top of the page.
+The documentation for the entire project can be found [here](/documentation/README.md) or in the **documentation** folder at the top of the page. Additionally, if you would like to read through and understand my troubleshooting process, you can find it [here](/troubleshooting/TS-proxmox-laptop-issue.md) or in the **troubleshooting** folder at the top of the page as well.
+
 
 <br>
 
