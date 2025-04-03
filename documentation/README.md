@@ -17,10 +17,10 @@
 
 <br>
 
-# Installation and configuration
+# Installation and Configuration
 Before I actually began the project, I wanted to install and configure all the necessary software, ISO files, etc., so that everything was ready for the CSL. The goal was to prepare everything in advance and save time during the different stages of the project.
 
-## Proxmox
+## Proxmox - 1st Attempt
 For the Proxmox installation and configuration, I used the [documentation](https://www.proxmox.com/en/proxmox-virtual-environment/get-started) provided by Proxmox themselves and followed it step by step. Keep in mind to read carefully and not just click through—take the time to understand each step.
 
 <br>
@@ -43,6 +43,7 @@ You should be able to install it on your own, as the documentation is quite clea
 > [!WARNING]  
 > As mentioned earlier, burning this disk with the Proxmox ISO file will permanently erase **ALL DATA** on the selected disk!
 
+<br>
 
 <h4>Rufus Setup</h4>
 <div style="display: flex; justify-content: space-between;">
@@ -72,6 +73,54 @@ If you’d like to read through my troubleshooting process, you can find all the
 > My ACER Switch Alpha 12 came with eMMC storage, a budget-friendly option found in low-cost devices. While sufficient for basic tasks, eMMC lacks the speed and durability of SSDs, which are better suited for long-term, intensive use.
 
 <br>
+
+Since my laptop wasn’t suitable for hosting Proxmox, I had to improvise. Luckily, I had an incredible teacher who gifted me an old Supermicro 'server' with 2 TB of storage. Long story short: I offered to buy it from him, but he refused—he insisted on giving it to me for free.
+
+<br>
+
+<h4>BOOT ORDER Priorities</h4>
+<div style="display: flex; justify-content;">
+  <img src="/assets/images/boot-order-prxmx.jpg" alt="Boot Order" style="width: 75%;" />
+</div>
+
+<br>
+
+To enter the BIOS, press either *Del* or *F2* repeatedly during startup. Once inside, navigate to the ***Boot*** section and, as shown in the screenshot, change **Boot Option 1** to **UEFI USB Key:UEFI**. If you don’t need to configure anything else, you can press *F4* to save and exit, or go to the ***Save & Exit*** tab and reboot the server.<br>
+If your system allows you to configure **IPMI**, I sincerely recommend doing so—it’s an incredibly useful and powerful feature to have.
+
+<br>
+
+### IPMI Configuration
+After configuring the BIOS boot order on the server, I also wanted to check whether IPMI was enabled and functioning—and in my case, it was. However, I had to configure the station IP address, subnet mask, gateway, etc., since it wasn’t adapted to my router / ISP settings.
+
+<br>
+
+> [!IMPORTANT]  
+> Make sure to ***check your ISP’s DHCP range*** so that you don’t assign an IP address within that scope, which could potentially cause conflicts!
+
+<br>
+
+
+
+**IPMI**, short for **I**ntelligent **P**latform **M**anagement **I**nterface, is a standardized interface used for out-of-band management of servers. It allows administrators to monitor, manage, and troubleshoot a system independently of the operating system, and even when the server is powered off, as long as it's connected to power and the network.
+
+When **IPMI** is enabled, I can access the server remotely through a dedicated management interface—often via a web-based dashboard or console—regardless of the server’s current state. This makes it possible to perform tasks like system reboots, BIOS configuration, or OS installations without needing physical access to the machine. It’s an incredibly useful and powerful feature, especially for server maintenance and remote administration!
+
+<br>
+
+## Proxmox - 2nd Attempt
+After the reboot, leave the USB drive plugged in and wait for the Proxmox installation process to start. Once it appears, choose the **Graphical Install**, as it is more user-friendly.
+
+- Select the target hard disk: `/dev/sda`  
+- Enter your **location** and **time zone**  
+- Create a **strong admin password**  
+- Use a **valid email address**, which will be used for important alerts and notifications from the server  
+- Choose a **fitting hostname**  
+- Configure the **IP address (CIDR)**, **gateway**, and **DNS** (`1.1.1.1` for Cloudflare or `8.8.8.8` for Google)
+
+Once you’ve completed the configuration and the installation finishes, **reboot your server/laptop/machine** (whatever you're using), and **unplug the USB stick** so the installed Proxmox system can load.<br>
+
+After a while, you’ll be prompted to log in. The default login is root, using the password you defined during the Proxmox installation.
 
 
 
