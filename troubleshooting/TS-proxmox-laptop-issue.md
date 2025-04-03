@@ -81,9 +81,12 @@ The problem turned out to be rather simple and obvious, but since I was working 
 Unfortunately, it didn’t work again. I realized I had a much bigger problem: ***damage to the eMMC*** itself. In an attempt to fix my laptop, I disassembled it and found that the cost of repair wasn’t worth it.
 
 ## Conclusion
-In short, the issue was that the BIOS boot order didn’t list anything besides the flash drive. It didn’t even recognize the hard drive, which indicated a hardware issue. Upon disassembling, I found that pretty much everything was loose or worn out — understandable since I hadn’t taken care of it for ages, especially during my school days.<br><br>
+In short, the BIOS boot order showed only the flash drive and didn’t recognize the hard drive, pointing to a hardware issue. After disassembling the device, I found most components were loose or worn out—which makes sense, given the lack of care during my school years. On top of that, Proxmox doesn’t support eMMC storage, so even if it hadn’t been damaged, it still wouldn’t have worked.<br><br>
 
-Unfortunately, I have to halt this project until further notice, as I don’t have a spare laptop or computer. If I can’t find one soon, I’ll either buy one or resort to using VMs, which I’d prefer not to do for my Cyberlab. I want to run it on physical hardware, not fully virtualized—because, why not?
+Unfortunately, I have to halt this project until further notice, as I don’t have a spare laptop or computer. If I can’t find one soon, I’ll either buy one or resort to using VMs, which I’d prefer not to do for my Cyberlab. I want to run it on physical hardware, not fully virtualized—because, why not?<br><br>
+
+***Update:***
+*My teacher gifted me an old Supermicro 'server' with 2 TB of storage. I can’t express how grateful I am—truly one of the best teachers I’ve ever had fr fr.*
 
 <br>
 

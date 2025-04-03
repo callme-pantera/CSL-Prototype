@@ -45,12 +45,11 @@ These are some of the points I wanted to include in my Cybersecurity Lab:
 - Firewall / monitoring tools
 - Private network for protection from external threats
   - IP configuration
-  - Subnetting
-  - Possible Testing Environment
+  - Subnetting, VLANs etc.
 
 <br>
 
-![network plan CSL](/assets/images/CSL-network-plan.png)
+![network plan CSL](/assets/images/CSL-network-plan-1.1.png)
 
 <br>
 
