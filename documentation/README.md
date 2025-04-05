@@ -30,7 +30,7 @@ For the Proxmox installation and configuration, I used the [documentation](https
 
 <br>
 
-You should be able to install it on your own, as the documentation is quite clear. Here are the steps I followed for the installation:
+You should be able to install it on your own, as the documentation is quite clear. Here are the summed up steps I followed for the installation:
 
 - Download the Proxmox ISO image installer (*in my case the 8.2-2 version*)
 - Download [Rufus](https://rufus.ie/de/) or another USB burning tool
@@ -45,7 +45,7 @@ You should be able to install it on your own, as the documentation is quite clea
 
 <br>
 
-<h4>Rufus Setup</h4>
+<h3>Rufus Setup</h3>
 <div style="display: flex; justify-content: space-between;">
   <img src="/assets/images/rufus-1.png" alt="Rufus 1" style="width: 45%;" />
   <img src="/assets/images/rufus-2.png" alt="Rufus 2" style="width: 45%;" />
@@ -53,7 +53,7 @@ You should be able to install it on your own, as the documentation is quite clea
 
 <br>
 
-<h4>Proxmox Booting via USB Drive - 1st Attempt</h4>
+<h3>Proxmox Booting via USB Drive</h3>
 <div style="display: flex; justify-content: space-between;">
   <img src="/assets/images/boot-proxmox1.jpg" alt="BIOS boot proxmox" style="width: 45%;" />
   <img src="/assets/images/boot-proxmox22.jpg" alt="BIOS boot proxmox success" style="width: 45%;" />
@@ -78,7 +78,7 @@ Since my laptop wasn’t suitable for hosting Proxmox, I had to improvise. Lucki
 
 <br>
 
-<h4>BOOT ORDER Priorities</h4>
+<h3>Boot Order Priorities</h3>
 <div style="display: flex; justify-content;">
   <img src="/assets/images/boot-order-prxmx.jpg" alt="Boot Order" style="width: 75%;" />
 </div>
@@ -100,16 +100,15 @@ After configuring the BIOS boot order on the server, I also wanted to check whet
 
 <br>
 
-
-
 **IPMI**, short for **I**ntelligent **P**latform **M**anagement **I**nterface, is a standardized interface used for out-of-band management of servers. It allows administrators to monitor, manage, and troubleshoot a system independently of the operating system, and even when the server is powered off, as long as it's connected to power and the network.
 
-When **IPMI** is enabled, I can access the server remotely through a dedicated management interface—often via a web-based dashboard or console—regardless of the server’s current state. This makes it possible to perform tasks like system reboots, BIOS configuration, or OS installations without needing physical access to the machine. It’s an incredibly useful and powerful feature, especially for server maintenance and remote administration!
+When **IPMI** is enabled, I can access the server remotely through a dedicated management interface—often via a web-based dashboard or console—regardless of the server’s current state. This makes it possible to perform tasks like system reboots, BIOS configuration, or OS installations without needing physical access to the machine. It’s an incredibly useful and powerful feature, especially for server maintenance and remote administration!<br>
+Most of the time, the IPMI LAN port is located separately from the other LAN ports. In my case, the IPMI port is isolated from the four regular LAN ports and positioned on the far left.
 
 <br>
 
 ## Proxmox - 2nd Attempt
-After the reboot, leave the USB drive plugged in and wait for the Proxmox installation process to start. Once it appears, choose the **Graphical Install**, as it is more user-friendly.
+Again after the reboot, leave the USB drive plugged in and wait for the Proxmox installation process to start. Once it appears, choose the **Graphical Install**, as it is more user-friendly.
 
 - Select the target hard disk: `/dev/sda`  
 - Enter your **location** and **time zone**  
@@ -119,8 +118,20 @@ After the reboot, leave the USB drive plugged in and wait for the Proxmox instal
 - Configure the **IP address (CIDR)**, **gateway**, and **DNS** (`1.1.1.1` for Cloudflare or `8.8.8.8` for Google)
 
 Once you’ve completed the configuration and the installation finishes, **reboot your server/laptop/machine** (whatever you're using), and **unplug the USB stick** so the installed Proxmox system can load.<br>
-
 After a while, you’ll be prompted to log in. The default login is root, using the password you defined during the Proxmox installation.
+
+<br>
+
+Here's what the IPMI interface looks like once you're logged in, and also how the Proxmox web GUI should appear after successful login:
+
+<div>
+  <img src="/assets/images/IPMI-preview.png" alt="IPMI" style="width: 90%;" />
+  <img src="/assets/images/Proxmox-preview.png" alt="Proxmox web GUI" style="width: 90%;" />
+</div>
+
+<br>
+
+
 
 
 
