@@ -90,6 +90,8 @@ If your system allows you to configure **IPMI**, I sincerely recommend doing so�
 
 <br>
 
+### IPMI Configuration
+
 After configuring the BIOS boot order on the server, I also wanted to check whether IPMI was enabled and functioning—and in my case, it was. However, I had to configure the station IP address, subnet mask, gateway, etc., since it wasn’t adapted to my router / ISP settings.
 
 <br>
@@ -105,6 +107,8 @@ When **IPMI** is enabled, I can access the server remotely through a dedicated m
 Most of the time, the IPMI LAN port is located separately from the other LAN ports. In my case, the IPMI port is isolated from the four regular LAN ports and positioned on the far left.
 
 <br>
+
+### Proxmox and IPMI Dashboards
 
 Again after the reboot, leave the USB drive plugged in and wait for the Proxmox installation process to start. Once it appears, choose the **Graphical Install**, as it is more user-friendly.
 
