@@ -78,7 +78,6 @@ Since my laptop wasn’t suitable for hosting Proxmox, I had to improvise. Lucki
 
 <br>
 
-<h3>Boot Order Priorities</h3>
 <div style="display: flex; justify-content;">
   <img src="/assets/images/boot-order-prxmx.jpg" alt="Boot Order" style="width: 100%;" />
 </div>
