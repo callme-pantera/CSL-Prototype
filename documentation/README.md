@@ -20,7 +20,7 @@
 # Installation and Configuration
 Before I actually began the project, I wanted to install and configure all the necessary software, ISO files, etc., so that everything was ready for the CSL. The goal was to prepare everything in advance and save time during the different stages of the project.
 
-## Proxmox - 1st Attempt
+## Proxmox
 For the Proxmox installation and configuration, I used the [documentation](https://www.proxmox.com/en/proxmox-virtual-environment/get-started) provided by Proxmox themselves and followed it step by step. Keep in mind to read carefully and not just click through—take the time to understand each step.
 
 <br>
@@ -47,16 +47,16 @@ You should be able to install it on your own, as the documentation is quite clea
 
 <h3>Rufus Setup</h3>
 <div style="display: flex; justify-content: space-between;">
-  <img src="/assets/images/rufus-1.png" alt="Rufus 1" style="width: 45%;" />
-  <img src="/assets/images/rufus-2.png" alt="Rufus 2" style="width: 45%;" />
+  <img src="/assets/images/rufus-1.png" alt="Rufus 1" style="width: 50%;" />
+  <img src="/assets/images/rufus-2.png" alt="Rufus 2" style="width: 50%;" />
 </div>
 
 <br>
 
 <h3>Proxmox Booting via USB Drive</h3>
 <div style="display: flex; justify-content: space-between;">
-  <img src="/assets/images/boot-proxmox1.jpg" alt="BIOS boot proxmox" style="width: 45%;" />
-  <img src="/assets/images/boot-proxmox22.jpg" alt="BIOS boot proxmox success" style="width: 45%;" />
+  <img src="/assets/images/boot-proxmox1.jpg" alt="BIOS boot proxmox" style="width: 50%;" />
+  <img src="/assets/images/boot-proxmox22.jpg" alt="BIOS boot proxmox success" style="width: 50%;" />
 </div>
 
 <br>
@@ -80,7 +80,7 @@ Since my laptop wasn’t suitable for hosting Proxmox, I had to improvise. Lucki
 
 <h3>Boot Order Priorities</h3>
 <div style="display: flex; justify-content;">
-  <img src="/assets/images/boot-order-prxmx.jpg" alt="Boot Order" style="width: 75%;" />
+  <img src="/assets/images/boot-order-prxmx.jpg" alt="Boot Order" style="width: 100%;" />
 </div>
 
 <br>
@@ -90,7 +90,6 @@ If your system allows you to configure **IPMI**, I sincerely recommend doing so�
 
 <br>
 
-### IPMI Configuration
 After configuring the BIOS boot order on the server, I also wanted to check whether IPMI was enabled and functioning—and in my case, it was. However, I had to configure the station IP address, subnet mask, gateway, etc., since it wasn’t adapted to my router / ISP settings.
 
 <br>
@@ -107,7 +106,6 @@ Most of the time, the IPMI LAN port is located separately from the other LAN por
 
 <br>
 
-## Proxmox - 2nd Attempt
 Again after the reboot, leave the USB drive plugged in and wait for the Proxmox installation process to start. Once it appears, choose the **Graphical Install**, as it is more user-friendly.
 
 - Select the target hard disk: `/dev/sda`  
@@ -125,12 +123,13 @@ After a while, you’ll be prompted to log in. The default login is root, using 
 Here's what the IPMI interface looks like once you're logged in, and also how the Proxmox web GUI should appear after successful login:
 
 <div>
-  <img src="/assets/images/IPMI-preview.png" alt="IPMI" style="width: 90%;" />
-  <img src="/assets/images/Proxmox-preview.png" alt="Proxmox web GUI" style="width: 90%;" />
+  <img src="/assets/images/IPMI-preview.png" alt="IPMI" style="width: 100%;" />
+  <img src="/assets/images/Proxmox-preview.png" alt="Proxmox web GUI" style="width: 100%;" />
 </div>
 
 <br>
 
+## OPNsense Firewall
 
 
 
