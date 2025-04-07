@@ -256,6 +256,9 @@ $ chmod +x /xyz/nat-uninstall.sh
 
 <br>
 
+After the successful **NAT** configuration for *vmbr2*, I started the VM and proceeded with the OPNsense installation. Unfortunately, after starting the VM, it crashed with an error stating that the *vmbr2* bridge does not exist. I verified this, and indeed, the bridge was missing because the section for *vmbr2* was completely absent from the `/etc/network/interfaces` file. I had to manually add the configuration and reload the network. If you want to know how I did it, you can read through the troubleshooting process [here]() or in the troubleshooting folder at the top.
+
+
 
 
 
