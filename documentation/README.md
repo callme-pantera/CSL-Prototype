@@ -178,6 +178,25 @@ Below are both scripts:
 
 <br>
 
+> [!TIP]
+> Before running the scripts, you can create manual backups of all affected system files. This ensures you can easily restore the previous state if needed. 
+> 
+> Use the following commands on your Proxmox host:
+>
+> ```
+> $ cp /etc/network/interfaces /etc/network/interfaces.bak
+> $ cp /etc/sysctl.conf /etc/sysctl.conf.bak
+> $ iptables-save > /root/iptables-before.txt
+> ```
+
+<br>
+
+<div>
+  <img src="/assets/images/backup_interfaces+sysctl.conf.png" style="width: 100%;">
+</div>
+
+<br>
+
 <h3>NAT Shell-Script</h3>
 
 ```
@@ -218,24 +237,7 @@ $ chmod +x /xyz/nat-uninstall.sh
 
 <br>
 
-> [!TIP]
-> Before running the scripts, you can create manual backups of all affected system files. This ensures you can easily restore the previous state if needed. 
-> 
-> Use the following commands on your Proxmox host:
->
-> ```
-> $ cp /etc/network/interfaces /etc/network/interfaces.bak
-> $ cp /etc/sysctl.conf /etc/sysctl.conf.bak
-> $ iptables-save > /root/iptables-before.txt
-> ```
 
-<br>
-
-<div>
-  <img src="/assets/images/backup_interfaces+sysctl.conf.png" style="width: 100%;">
-</div>
-
-<br>
 
 
 
