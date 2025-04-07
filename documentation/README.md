@@ -210,7 +210,12 @@ sed -i 's/^#net.ipv4.ip_forward=1/net.ipv4.ip_forward=1/' /etc/sysctl.conf
 sysctl -w net.ipv4.ip_forward=1
 iptables -t nat -A POSTROUTING -s x.x.x.x/24 -o vmbr0 -j MASQUERADE
 iptables-save > /etc/iptables.up.rules
-echo "pre-up iptables-restore < /etc/iptables.up.rules" >> /etc/network/interfaces
+
+# Add only if not already in interfaces file
+line='pre-up iptables-restore < /etc/iptables.up.rules'
+file='/etc/network/interfaces'
+grep -Fxq "$line" "$file" || echo "$line" >> "$file"
+
 ```
 
 ```
@@ -224,16 +229,30 @@ $ chmod +x /xyz/nat-setup.sh
 ```
 #!/bin/bash
 
-# Uninstall script for NAT configuration
+# NAT uninstall script for vmbr2 → vmbr0
+# Author: Pantera
 
-iptables -t nat -D POSTROUTING -s x.x.x.x/24 -o vmbr0 -j MASQUERADE
-sed -i '/^pre-up iptables-restore < \/etc\/iptables.up.rules$/d' /etc/network/interfaces
+# Remove all duplicate NAT rules
+while iptables -t nat -C POSTROUTING -s x.x.x.x/24 -o vmbr0 -j MASQUERADE 2>/dev/null; do
+    iptables -t nat -D POSTROUTING -s x.x.x.x/24 -o vmbr0 -j MASQUERADE
+done
+
+# Remove any variant of the auto-restore line from /etc/network/interfaces
+sed -i '/iptables-restore < \/etc\/iptables.up.rules/d' /etc/network/interfaces
+
+# Delete stored iptables rule file
 rm -f /etc/iptables.up.rules
 ```
 
 ```
 $ chmod +x /xyz/nat-uninstall.sh
 ```
+
+<br>
+
+<div>
+  <img src="/assets/images/NAT-script-success.png" style="width: 100%;">
+</div>
 
 <br>
 
