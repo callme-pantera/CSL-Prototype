@@ -258,9 +258,32 @@ $ chmod +x /xyz/nat-uninstall.sh
 
 After the successful **NAT** configuration for *vmbr2*, I started the VM and proceeded with the OPNsense installation. Unfortunately, after starting the VM, it crashed with an error stating that the *vmbr2* bridge does not exist. I verified this, and indeed, the bridge was missing because the section for *vmbr2* was completely absent from the `/etc/network/interfaces` file. I had to manually add the configuration and reload the network. If you want to know how I did it, you can read through the troubleshooting process [here]() or in the troubleshooting folder at the top.
 
+<br>
 
+Once the VM starts, you’ll see the live-mode login screen, which tells you to log in as either `root` or `installer`. Since this is our first time starting the VM and we need to install the system, we’ll log in as `installer` of course. The default password for both `installer` and `root` is `opnsense`.<br>
 
+- Choose your **keyboard layout**  
+- Choose your **installation type** (*I chose ZFS for a modern installation*)  
+- Select the **virtual device type** (*I chose Stripe*)  
+- Select your **target disk** for the installation  
 
+<br>
+
+> [!NOTE]
+> ZFS:
+> The recommended 3 GB of RAM for ZFS wasn't a concern in this case, since I can always allocate more RAM via Proxmox if needed. That’s why I went ahead with ZFS.
+> 
+> Virtual Device Type:
+> I chose the stripe option (no redundancy) because this OPNsense instance runs inside Proxmox, where backups are handled separately. Redundancy wasn't necessary for this lab setup.
+
+<br>
+
+<div>
+  <img src="/assets/images/OPNsense-login1.png" style="width: 100%;">
+  <img src="/assets/images/OPNsenes-download-progress.png" style="width: 100%;">
+</div>
+
+<br>
 
 
 
