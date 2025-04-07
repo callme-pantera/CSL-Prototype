@@ -133,6 +133,114 @@ Here's what the IPMI interface looks like once you're logged in, and also how th
 <br>
 
 ## OPNsense Firewall
+Once I logged into my Proxmox server, I began installing and configuring the OPNsense firewall. As mentioned earlier, I had already downloaded all necessary resources (ISO files etc.) in advance to save time throughout the project.<br>
+
+To properly integrate the firewall into my virtual lab environment, I first created two additional Linux bridges:
+
+  - ***vmbr1*** serves as the *internal LAN bridge*. It functions as a virtual switch, connecting all internal lab VMs and VLANs to the OPNsense instance. This bridge is dedicated to traffic inside the lab, enabling segmentation and routing through the firewall.
+
+  - ***vmbr2*** acts as the *virtual WAN interface*. It provides the OPNsense firewall with access to the internet through a **NAT** (Network Address Translation) configuration. This setup allows outbound connectivity without exposing the internal lab network or interfering with the physical home network.
+
+I intentionally **avoided using vmbr0** (the default Proxmox WAN bridge) for the OPNsense WAN interface. *vmbr0* is directly connected to my home router and is used by the Proxmox host itself. Using *vmbr0* inside the firewall VM would have created a conflict, as both the OPNsense instance and the Proxmox host would attempt to use the same default gateway, leading to **routing issues and potential network disruptions**.<br>
+
+By isolating the *WAN traffic* of the OPNsense VM on *vmbr2* and implementing *NAT* on the Proxmox host, I ensured that the firewall has internet access without overlapping with or disrupting the production network. This approach also **provides a safe and controlled boundary** between the lab environment and the external network, which is essential for cybersecurity.
+
+<br>
+
+> [!TIP]
+> Make sure to check the 'VLAN Aware' box to ensure communication with other VLANs.
+
+<br>
+
+<div>
+  <img src="/assets/images/prxmx-fw-config1.png" style="width: 100%;">
+</div>
+
+<br>
+
+> [!NOTE]
+> Notice that I’ve selected *vmbr1* (the LAB LAN) instead of *vmbr0* (the WAN). Once I’ve finished configuring the firewall, I’ll return to this point and update it accordingly to include *vmbr2*.
+
+<br>
+
+<div>
+  <img src="/assets/images/prxmx-fw-config2.png" style="width: 100%;">
+  <img src="/assets/images/prxmx-fw-config3.png" style="width: 100%;">
+</div>
+
+<br>
+
+Before actually starting the OPNsense firewall VM, I needed to ensure that vmbr2 could access the internet through a NAT (Network Address Translation) mechanism. To achieve this, I created a custom shell script that configures Proxmox to forward traffic from the vmbr2 subnet (10.10.0.0/24) to the main WAN interface (vmbr0), allowing outbound internet access for the OPNsense firewall.<br>
+
+This approach provides full internet connectivity for the virtual WAN interface without interfering with the physical home network or reusing the host’s default gateway. In addition, I created a second shell script that cleanly removes the NAT configuration in case I need to disable or undo these changes in the future.<br>
+
+Below are both scripts:
+
+<br>
+
+<h3>NAT Shell-Script</h3>
+
+```
+#!/bin/bash
+
+# NAT configuration script for vmbr2 → vmbr0
+# Author: Pantera
+
+echo 1 > /proc/sys/net/ipv4/ip_forward
+sed -i 's/^#net.ipv4.ip_forward=1/net.ipv4.ip_forward=1/' /etc/sysctl.conf
+sysctl -w net.ipv4.ip_forward=1
+iptables -t nat -A POSTROUTING -s x.x.x.x/24 -o vmbr0 -j MASQUERADE
+iptables-save > /etc/iptables.up.rules
+echo "pre-up iptables-restore < /etc/iptables.up.rules" >> /etc/network/interfaces
+```
+
+```
+$ chmod +x /xyz/nat-setup.sh
+```
+
+<br>
+
+<h3>NAT Uninstall Shell-Script</h3>
+
+```
+#!/bin/bash
+
+# Uninstall script for NAT configuration
+
+iptables -t nat -D POSTROUTING -s x.x.x.x/24 -o vmbr0 -j MASQUERADE
+sed -i '/^pre-up iptables-restore < \/etc\/iptables.up.rules$/d' /etc/network/interfaces
+rm -f /etc/iptables.up.rules
+```
+
+```
+$ chmod +x /xyz/nat-uninstall.sh
+```
+
+<br>
+
+> [!TIP]
+> Before running the scripts, you can create manual backups of all affected system files. This ensures you can easily restore the previous state if needed. 
+> 
+> Use the following commands on your Proxmox host:
+>
+> ```
+> $ cp /etc/network/interfaces /etc/network/interfaces.bak
+> $ cp /etc/sysctl.conf /etc/sysctl.conf.bak
+> $ iptables-save > /root/iptables-before.txt
+> ```
+
+<br>
+
+<div>
+  <img src="/assets/images/backup_interfaces+sysctl.conf.png" style="width: 100%;">
+</div>
+
+<br>
+
+
+
+
+
 
 
 
