@@ -302,6 +302,7 @@ After the successful installation and configuration you should be able to login 
 
 
 
+![vlan10 windows vm preview](../assets/images/vlan10-test-win11-creation-preview.png)
 
 
 

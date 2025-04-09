@@ -44,8 +44,8 @@ These are some of the points I wanted to include in my Cybersecurity Lab:
 - Kali Linux
 - Firewall / monitoring tools
 - Private network for protection from external threats
-  - IP configuration
   - VLANs
+- 
 
 <br>
 
@@ -56,7 +56,7 @@ These are some of the points I wanted to include in my Cybersecurity Lab:
 ## What do you need?
 Throughout this project, I will be adding to and adjusting my documentation as needed. For now, here are the essential components you'll need:
 - [Proxmox](https://www.proxmox.com/en/)
-- [OPNsense](https://opnsense.org/download/) (*or another firewall of your choice*)
+- [OPNsense](https://opnsense.org/download/) (*or any other firewall you prefer*)
 - [Kali Linux](https://www.kali.org/get-kali/#kali-platforms)
 - [Ubuntu Server](https://ubuntu.com/download/server)
 - [Ubuntu Desktop](https://ubuntu.com/download/desktop)
