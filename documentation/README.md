@@ -256,6 +256,8 @@ $ chmod +x /xyz/nat-uninstall.sh
 
 <br>
 
+### OPNsense VM installation and configuration
+
 After the successful **NAT** configuration for *vmbr2*, I started the VM and proceeded with the OPNsense installation. Unfortunately, after starting the VM, it crashed with an error stating that the *vmbr2* bridge does not exist. I verified this, and indeed, the bridge was missing because the section for *vmbr2* was completely absent from the `/etc/network/interfaces` file. I had to manually add the configuration and reload the network. If you want to know how I did it, you can read through the troubleshooting process [here]() or in the troubleshooting folder at the top.
 
 <br>
@@ -282,6 +284,19 @@ Once the VM starts, you’ll see the live-mode login screen, which tells you to 
   <img src="/assets/images/OPNsense-login1.png" style="width: 100%;">
   <img src="/assets/images/OPNsenes-download-progress.png" style="width: 100%;">
 </div>
+
+<br>
+
+After the successful installation and configuration you should be able to login as root with the standard password or if you've chagned it with yours. Once logged in you'll see 13 Options to choose from. Firstly we're gonna set the interface ip adresses:<br>
+
+- Selected option `2` to configure interface settings  
+- Chose the **WAN interface** (`vtnet1`) for configuration  
+- Declined the **DHCP option**, as I wanted to assign a static IP address that fits the predefined LAB infrastructure  
+- Declined to use the gateway IP as the DNS server, since there is **no DNS service running** at that address  
+- Manually set **`1.1.1.1`** as the WAN DNS server (Cloudflare)  
+- Skipped IPv6 configuration for now  
+- Kept the Web GUI protocol as **HTTPS** (did not switch to HTTP)  
+- Chose to generate a **new self-signed Web GUI certificate** for secure access
 
 <br>
 

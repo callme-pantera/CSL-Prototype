@@ -45,17 +45,22 @@ These are some of the points I wanted to include in my Cybersecurity Lab:
 - Firewall / monitoring tools
 - Private network for protection from external threats
   - IP configuration
-  - Subnetting, VLANs etc.
+  - VLANs
 
 <br>
 
-![network plan CSL](/assets/images/CSL-network-plan-1.1.png)
+![network plan CSL](/assets/images/CSL-network-plan-v1.3.png)
 
 <br>
 
 ## What do you need?
 Throughout this project, I will be adding to and adjusting my documentation as needed. For now, here are the essential components you'll need:
 - [Proxmox](https://www.proxmox.com/en/)
+- [OPNsense](https://opnsense.org/download/) (*or another firewall of your choice*)
+- [Kali Linux](https://www.kali.org/get-kali/#kali-platforms)
+- [Ubuntu Server](https://ubuntu.com/download/server)
+- [Ubuntu Desktop](https://ubuntu.com/download/desktop)
+- [Windows](https://www.microsoft.com/en-us/software-download/windows11)
 - 
 
 
