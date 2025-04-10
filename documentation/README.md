@@ -291,7 +291,7 @@ After the successful installation and configuration you should be able to login 
 
 - Selected option `2` to configure interface settings  
 - Chose the **WAN interface** (`vtnet1`) for configuration  
-- Declined the **DHCP option**, as I wanted to assign a static IP address that fits the predefined LAB infrastructure  
+- Declined the **DHCP option**, as I wanted to assign a static IP address that fits the predefined LAB infrastructure (Lab LAN)  
 - Declined to use the gateway IP as the DNS server, since there is **no DNS service running** at that address  
 - Manually set **`1.1.1.1`** as the WAN DNS server (Cloudflare)  
 - Skipped IPv6 configuration for now  
@@ -299,6 +299,8 @@ After the successful installation and configuration you should be able to login 
 - Chose to generate a **new self-signed Web GUI certificate** for secure access
 
 <br>
+
+
 
 
 
