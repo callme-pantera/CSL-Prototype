@@ -306,6 +306,8 @@ After the successful installation and configuration you should be able to login 
 - Kept the Web GUI protocol as **HTTPS** (did not switch to HTTP)  
 - Chose to generate a **new self-signed Web GUI certificate** for secure access
 
+<br>
+
 - After that again select the option `2` to configure the interface settings
 - Choose the **LAN interface** (`vtnet0`) for configuration
 - Declined the **DHCP option**, as I wanted to assign a static IP address that fits the predefined LAB infrastructure (`vmbr1` - virtual WAN / NAT)
@@ -344,7 +346,7 @@ I decided to go through the "Wizard" configuration option because it includes al
 <div>
   <img src="/assets/images/OPNsense-wizard1.png" style="width: 100%;">
   <img src="/assets/images/OPNsense-wizard2.png" style="width: 100%;">
-  <img src="/assets/images/OPNsense-wizard3.1.png.png" style="width: 100%;">
+  <img src="/assets/images/OPNsense-wizard3.1.png" style="width: 100%;">
   <img src="/assets/images/OPNsense-wizard3.2.png" style="width: 100%;">
   <img src="/assets/images/OPNsense-wizard3.3.png" style="width: 100%;">
   <img src="/assets/images/OPNsense-wizard4.png" style="width: 100%;">
