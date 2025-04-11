@@ -346,7 +346,7 @@ I decided to go through the "Wizard" configuration option because it includes al
   <img src="/assets/images/OPNsense-wizard2.png" style="width: 100%;">
   <img src="/assets/images/OPNsense-wizard3.1.png.png" style="width: 100%;">
   <img src="/assets/images/OPNsense-wizard3.2.png" style="width: 100%;">
-  <img src="/assets/images/OPNsense-wizard3.3.png.png" style="width: 100%;">
+  <img src="/assets/images/OPNsense-wizard3.3.png" style="width: 100%;">
   <img src="/assets/images/OPNsense-wizard4.png" style="width: 100%;">
   <img src="/assets/images/OPNsense-wizard5.png" style="width: 100%;">
 </div>
