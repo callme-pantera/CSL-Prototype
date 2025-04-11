@@ -141,14 +141,14 @@ To properly integrate the firewall into my virtual lab environment, I first crea
 
   - ***vmbr2*** acts as the *virtual WAN interface*. It provides the OPNsense firewall with access to the internet through a **NAT** (Network Address Translation) configuration. This setup allows outbound connectivity without exposing the internal lab network or interfering with the physical home network.
 
-I intentionally **avoided using vmbr0** (the default Proxmox WAN bridge) for the OPNsense WAN interface. *vmbr0* is directly connected to my home router and is used by the Proxmox host itself. Using *vmbr0* inside the firewall VM would have created a conflict, as both the OPNsense instance and the Proxmox host would attempt to use the same default gateway, leading to **routing issues and potential network disruptions**.<br>
+I intentionally **avoided using vmbr0** (the default Proxmox WAN bridge) for the OPNsense WAN interface. *vmbr0* is directly connected to my home router and is used by the Proxmox host itself. Using *vmbr0* inside the firewall VM would have created a conflict, as the OPNsense VM, my home router, and the Proxmox host would all attempt to use the same default gateway, leading to **routing issues and potential network disruptions**.<br>
 
 By isolating the *WAN traffic* of the OPNsense VM on *vmbr2* and implementing *NAT* on the Proxmox host, I ensured that the firewall has internet access without overlapping with or disrupting the production network. This approach also **provides a safe and controlled boundary** between the lab environment and the external network, which is essential for cybersecurity.
 
 <br>
 
 > [!TIP]
-> Make sure to check the 'VLAN Aware' box to ensure communication with other VLANs.
+> When creating the firewall VM, make sure to check the 'VLAN Aware' box to ensure communication with other VLANs.
 
 <br>
 
@@ -201,21 +201,29 @@ Below are both scripts:
 
 ```
 #!/bin/bash
-
 # NAT configuration script for vmbr2 → vmbr0
 # Author: Pantera
 
+# Enable IPv4 forwarding
 echo 1 > /proc/sys/net/ipv4/ip_forward
-sed -i 's/^#net.ipv4.ip_forward=1/net.ipv4.ip_forward=1/' /etc/sysctl.conf
+sed -i 's/^#net.ipv4.ip_forward=.*/net.ipv4.ip_forward=1/' /etc/sysctl.conf
 sysctl -w net.ipv4.ip_forward=1
+
+# Set up NAT rule
 iptables -t nat -A POSTROUTING -s x.x.x.x/24 -o vmbr0 -j MASQUERADE
+
+# Save rules
 iptables-save > /etc/iptables.up.rules
 
-# Add only if not already in interfaces file
-line='pre-up iptables-restore < /etc/iptables.up.rules'
-file='/etc/network/interfaces'
-grep -Fxq "$line" "$file" || echo "$line" >> "$file"
+# Create persistent loader
+cat <<EOF > /etc/rc.local
+#!/bin/sh -e
+iptables-restore < /etc/iptables.up.rules
+exit 0
+EOF
 
+# Make /etc/rc.local executable
+chmod +x /etc/rc.local
 ```
 
 ```
@@ -228,20 +236,20 @@ $ chmod +x /xyz/nat-setup.sh
 
 ```
 #!/bin/bash
-
-# NAT uninstall script for vmbr2 → vmbr0
+# NAT configuration script for vmbr2 → vmbr0
 # Author: Pantera
+# Uninstall NAT config
 
-# Remove all duplicate NAT rules
-while iptables -t nat -C POSTROUTING -s x.x.x.x/24 -o vmbr0 -j MASQUERADE 2>/dev/null; do
-    iptables -t nat -D POSTROUTING -s x.x.x.x/24 -o vmbr0 -j MASQUERADE
+# Remove NAT rule
+while iptables -t nat -C POSTROUTING -s 10.10.0.0/24 -o vmbr0 -j MASQUERADE 2>/dev/null; do
+    iptables -t nat -D POSTROUTING -s 10.10.0.0/24 -o vmbr0 -j MASQUERADE
 done
 
-# Remove any variant of the auto-restore line from /etc/network/interfaces
-sed -i '/iptables-restore < \/etc\/iptables.up.rules/d' /etc/network/interfaces
-
-# Delete stored iptables rule file
+# Remove iptables file
 rm -f /etc/iptables.up.rules
+
+# Remove rc.local if created by us
+rm -f /etc/rc.local
 ```
 
 ```
@@ -251,7 +259,7 @@ $ chmod +x /xyz/nat-uninstall.sh
 <br>
 
 <div>
-  <img src="/assets/images/NAT-script-success.png" style="width: 100%;">
+  <img src="/assets/images/NAT-script-success-2.png" style="width: 100%;">
 </div>
 
 <br>
@@ -291,20 +299,45 @@ After the successful installation and configuration you should be able to login 
 
 - Selected option `2` to configure interface settings  
 - Chose the **WAN interface** (`vtnet1`) for configuration  
-- Declined the **DHCP option**, as I wanted to assign a static IP address that fits the predefined LAB infrastructure (Lab LAN)  
+- Declined the **DHCP option**, as I wanted to assign a static IP address that fits the predefined LAB infrastructure (`vmbr2` - Lab LAN)
 - Declined to use the gateway IP as the DNS server, since there is **no DNS service running** at that address  
 - Manually set **`1.1.1.1`** as the WAN DNS server (Cloudflare)  
 - Skipped IPv6 configuration for now  
 - Kept the Web GUI protocol as **HTTPS** (did not switch to HTTP)  
 - Chose to generate a **new self-signed Web GUI certificate** for secure access
 
+- After that again select the option `2` to configure the interface settings
+- Choose the **LAN interface** (`vtnet0`) for configuration
+- Declined the **DHCP option**, as I wanted to assign a static IP address that fits the predefined LAB infrastructure (`vmbr1` - virtual WAN / NAT)
+- Make sure to NOT enter a upstream gateway for this interface
+- Skipped IPv6 configuration for now
+- Enabled DHCP on LAN 
+- Keep the Web GUI protocol as **HTTPS** (did not switch to HTTP) 
+- Chose to generate a **new self-signed Web GUI certificate** for secure access
+
 <br>
 
+> [!IMPORTANT]
+> To be honest, I don't know how or when it happened to me, but **MAKE SURE** to check whether the Linux bridges (*vmbr*) are correctly assigned to the firewall's network interfaces.
+> You'll save yourself hours of troubleshooting by simply verifying that `net0 = vmbr1` (Lab LAN) and `net1 = vmbr2` (virtual WAN NAT).
 
+<br>
 
+Once you've finished the installation and configuration, create a VM with an operating system of your choice and make sure **NOT to attach it to a VLAN** just yet!  
+In my case, that would be VLAN 10 for testing — but I need to do that **AFTER** logging into the OPNsense web GUI so I can configure the VLANs there first.  
+If you attach the VLAN too early, it may lead to issues with DHCP and internet access for all VMs using VLAN tags.<br>
+Once everything is set up in OPNsense, you’ll find the option to assign the VLAN in the VM’s network tab. This configuration step is essential for VLANs to work correctly in OPNsense, since VLANs will be **configured, assigned, and managed directly through the firewall.**
+<br>  
+This VM will be used for testing purposes, so the configuration doesn't matter too much. In my case, I created a Ubuntu Desktop VM. Here are the configurations I used:
 
+<br>
 
-![vlan10 windows vm preview](../assets/images/vlan10-test-win11-creation-preview.png)
+<div>
+  <img src="/assets/images/ubuntu-desktop-preview-vm.png" style="width: 100%;">
+</div>
+
+<br>
+
 
 
 
