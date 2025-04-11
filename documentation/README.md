@@ -241,8 +241,8 @@ $ chmod +x /xyz/nat-setup.sh
 # Uninstall NAT config
 
 # Remove NAT rule
-while iptables -t nat -C POSTROUTING -s 10.10.0.0/24 -o vmbr0 -j MASQUERADE 2>/dev/null; do
-    iptables -t nat -D POSTROUTING -s 10.10.0.0/24 -o vmbr0 -j MASQUERADE
+while iptables -t nat -C POSTROUTING -s x.x.x.x/24 -o vmbr0 -j MASQUERADE 2>/dev/null; do
+    iptables -t nat -D POSTROUTING -s x.x.x.x/24 -o vmbr0 -j MASQUERADE
 done
 
 # Remove iptables file
@@ -338,7 +338,7 @@ This VM will be used for testing purposes, so the configuration doesn't matter t
 
 <br>
 
-
+### OPNsense web GUI configuration
 
 
 
