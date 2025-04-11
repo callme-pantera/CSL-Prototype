@@ -339,7 +339,17 @@ This VM will be used for testing purposes, so the configuration doesn't matter t
 <br>
 
 ### OPNsense web GUI configuration
+I decided to go through the "Wizard" configuration option because it includes all the basic settings in one place. This saved me time, as I didn’t have to click through the entire menu to reach each configuration section. I won’t document it very thoroughly since it’s pretty self-explanatory, but here are some of the configurations I made:<br>
 
+<div>
+  <img src="/assets/images/OPNsense-wizard1.png" style="width: 100%;">
+  <img src="/assets/images/OPNsense-wizard2.png" style="width: 100%;">
+  <img src="/assets/images/OPNsense-wizard3.1.png.png" style="width: 100%;">
+  <img src="/assets/images/OPNsense-wizard3.2.png" style="width: 100%;">
+  <img src="/assets/images/OPNsense-wizard3.3.png.png" style="width: 100%;">
+  <img src="/assets/images/OPNsense-wizard4.png" style="width: 100%;">
+  <img src="/assets/images/OPNsense-wizard5.png" style="width: 100%;">
+</div>
 
 
 
