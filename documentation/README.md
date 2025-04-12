@@ -396,7 +396,7 @@ Now that the "Wizard" configuration is complete, I moved on to configure all the
 
 <div>
   <img src="/assets/images/vlan10-creation4.png" style="width: 100%;">
-  <img src="/assets/images/vlan10-creation4.2.png.png" style="width: 100%;">
+  <img src="/assets/images/vlan10-creation4.2.png" style="width: 100%;">
 </div>
 
 <br>
