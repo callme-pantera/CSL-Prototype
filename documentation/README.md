@@ -448,8 +448,41 @@ Now that the "Wizard" configuration is complete, I moved on to configure all the
 - Create a new rule and make sure to fill it out exactly as shown in the screenshots above.
 
 ### OPNsense – VLAN Setup Test
+To verify that our VLAN configurations were successful, I ran a series of commands and performed several checks to ensure everything was working as intended. These tests helped confirm that the firewall rules, IP assignments, and network segmentation were all functioning properly.<br>
 
+```
+$ ipconfig
+```
+```
+$ ping 8.8.8.8
+$ ping x.x.x.x
+```
+```
+$ nslookup opnsense.lab.local
+```
 
+<br>
+
+<div>
+  <img src="/assets/images/opnsense-test.png" style="width: 100%";>
+  <img src="/assets/images/opnsense-test2.png" style="width: 100%";>
+  <img src="/assets/images/opnsense-test2.2.png" style="width: 100%";>
+  <img src="/assets/images/opnsense-test3.png" style="width: 100%";>
+  <img src="/assets/images/opnsense-test4.png" style="width: 100%";>
+</div>
+
+<br>
+
+Here is the breakdown of every test I have performed to verify the configuration's validity:<br>
+
+- `ipconfig` confirms that the client **successfully received an IP address** from the OPNsense DHCP server.
+- `ping 8.8.8.8` verifies **internet connectivity via ICMP**; packets are reaching Google’s DNS server with 0% loss.
+- `ping x.x.x.x` returns *“Destination host unreachable”*, which is **expected** – access to the firewall gateway is intentionally blocked for this VLAN.
+- `nslookup opnsense.lab.local` shows that **external DNS is working**, but internal names like `lab.local` are not resolved – **as configured** (no internal DNS or override).
+- The **Koenigsegg Agera RS** — a breathtaking marvel of engineering — appearing in a Bing image search: confirmation that DNS resolution and web browsing are **functioning flawlessly** 😂.
+- Attempting to access the OPNsense Web GUI **fails as expected** – access from VLAN10 is restricted by firewall rules to prevent potential compromise.
+
+<br>
 
 
 
