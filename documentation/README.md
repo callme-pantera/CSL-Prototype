@@ -264,7 +264,7 @@ $ chmod +x /xyz/nat-uninstall.sh
 
 <br>
 
-### OPNsense VM installation and configuration
+### OPNsense VM Installation and Configuration
 
 After the successful **NAT** configuration for *vmbr2*, I started the VM and proceeded with the OPNsense installation. Unfortunately, after starting the VM, it crashed with an error stating that the *vmbr2* bridge does not exist. I verified this, and indeed, the bridge was missing because the section for *vmbr2* was completely absent from the `/etc/network/interfaces` file. I had to manually add the configuration and reload the network. If you want to know how I did it, you can read through the troubleshooting process [here]() or in the troubleshooting folder at the top.
 
@@ -340,7 +340,7 @@ This VM will be used for testing purposes, so the configuration doesn't matter t
 
 <br>
 
-### OPNsense web GUI configuration
+### OPNsense web GUI Configuration
 I decided to go through the "Wizard" configuration option because it includes all the basic settings in one place. This saved me time, as I didn’t have to click through the entire menu to reach each configuration section. I won’t document it very thoroughly since it’s pretty self-explanatory, but here are some of the configurations I made:<br>
 
 <div>
@@ -352,6 +352,105 @@ I decided to go through the "Wizard" configuration option because it includes al
   <img src="/assets/images/OPNsense-wizard4.png" style="width: 100%;">
   <img src="/assets/images/OPNsense-wizard5.png" style="width: 100%;">
 </div>
+
+<br>
+
+### OPNsense VLAN Configuration
+Now that the "Wizard" configuration is complete, I moved on to configure all the VLANs along with the corresponding firewall rules. Here are the summarized steps of how I did it:<br>
+
+#### VLAN Creation
+
+<div>
+  <img src="/assets/images/vlan10-creation.png" style="width: 100%;">
+</div>
+
+<br>
+
+- Head to `Interfaces > Devices > VLAN`  
+- Leave the device name empty; OPNsense will generate a fitting name automatically  
+- Choose the correct parent interface (*in my case, `vtnet0` → LAN*)  
+- Enter the appropriate VLAN tag (*e.g., 10 for VLAN 10*)  
+- Write a clear and descriptive name  
+- Save and apply the changes  
+
+<br>
+
+#### Assign New Interface
+
+<div>
+  <img src="/assets/images/vlan10-creation2.png" style="width: 100%;">
+  <img src="/assets/images/vlan10-creation3.png" style="width: 100%;">
+</div>
+
+<br>
+
+- Head to `Interfaces > Assignments`  
+- Add the newly created VLAN device and save it  
+- Go to `Interfaces > VLAN10Testing` and enable the interface  
+- Once enabled, change the **IPv4 Configuration Type** to **Static** and assign a suitable IP address  
+- *I also updated the description for a more fitting alternative*
+
+<br>
+
+#### Activate DHCP for VLAN
+
+<div>
+  <img src="/assets/images/vlan10-creation4.png" style="width: 100%;">
+  <img src="/assets/images/vlan10-creation4.2.png.png" style="width: 100%;">
+</div>
+
+<br>
+
+- Head to `Services > ISC DHCPv4 > LAN_VLAN10` and enable DHCP server on the interface (LAN_VLAN10).
+- Enter your IP range and don’t forget to specify a DNS server before saving. (*I chose 1.1.1.1 and 8.8.8.8 — Cloudflare and Google*)
+
+<br>
+
+#### Firewall Rule – Block VLAN10 Access to OPNsense
+
+<div>
+  <img src="/assets/images/vlan10-creation5.1.png" style="width: 100%;">
+  <img src="/assets/images/vlan10-creation5.2.png" style="width: 100%;">
+</div>
+
+<br>
+
+- Head to `Firewall > Rules > LAN_VLAN10` and add a new rule.
+- Make sure to block access from VLAN10 to the OPNsense interface, as shown in the screenshots. Since this is a testing VLAN in my case, allowing it to access the firewall while intentionally testing potentially malicious software would pose an **unnecessary security risk**.
+
+<br>
+
+#### Firewall Rule – Allow Internet Access from VLAN10
+
+<div>
+  <img src="/assets/images/vlan10-creation6.1.png" style="width: 100%;">
+  <img src="/assets/images/vlan10-creation6.2.png" style="width: 100%;">
+</div>
+
+<br>
+
+- Head to `Firewall > Rules > LAN_VLAN10` and add a new rule.
+- Make sure to allow internet access from VLAN10, as shown in the screenshots above.
+
+<br>
+
+#### NAT Configuration for VLAN10
+
+<div>
+  <img src="/assets/images/vlan10-creation7.png" style="width: 100%;">
+  <img src="/assets/images/vlan10-creation9.1.png" style="width: 100%;">
+  <img src="/assets/images/vlan10-creation9.2.png" style="width: 100%;">
+</div>
+
+<br>
+
+- Head to `Firewall > NAT > Outbound` and set the NAT mode to **Hybrid Outbound NAT rule generation**.  
+- Create a new rule and make sure to fill it out exactly as shown in the screenshots above.
+
+### OPNsense – VLAN Setup Test
+
+
+
 
 
 
