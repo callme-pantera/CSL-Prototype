@@ -170,7 +170,7 @@ By isolating the *WAN traffic* of the OPNsense VM on *vmbr2* and implementing *N
 
 <br>
 
-Before actually starting the OPNsense firewall VM, I needed to ensure that vmbr2 could access the internet through a NAT (Network Address Translation) mechanism. To achieve this, I created a custom shell script that configures Proxmox to forward traffic from the vmbr2 subnet (10.10.0.0/24) to the main WAN interface (vmbr0), allowing outbound internet access for the OPNsense firewall.<br>
+Before actually starting the OPNsense firewall VM, I needed to ensure that *vmbr2* could access the internet through a NAT (Network Address Translation) mechanism. To achieve this, I created a custom shell script that configures Proxmox to forward traffic from the *vmbr2* subnet to the main WAN interface (*vmbr0*), allowing outbound internet access for the OPNsense firewall.<br>
 
 This approach provides full internet connectivity for the virtual WAN interface without interfering with the physical home network or reusing the host’s default gateway. In addition, I created a second shell script that cleanly removes the NAT configuration in case I need to disable or undo these changes in the future.<br>
 
@@ -264,9 +264,9 @@ $ chmod +x /xyz/nat-uninstall.sh
 
 <br>
 
-### OPNsense VM Installation and Configuration
+### Firewall VM Installation and Configuration
 
-After the successful **NAT** configuration for *vmbr2*, I started the VM and proceeded with the OPNsense installation. Unfortunately, after starting the VM, it crashed with an error stating that the *vmbr2* bridge does not exist. I verified this, and indeed, the bridge was missing because the section for *vmbr2* was completely absent from the `/etc/network/interfaces` file. I had to manually add the configuration and reload the network. If you want to know how I did it, you can read through the troubleshooting process [here]() or in the troubleshooting folder at the top.
+After the successful **NAT** configuration for *vmbr2*, I started the VM and proceeded with the OPNsense installation. Unfortunately, after starting the VM, it crashed with an error stating that the *vmbr2* bridge does not exist. I verified this, and indeed, the bridge was missing because the section for *vmbr2* was completely absent from the `/etc/network/interfaces` file. I had to manually add the configuration and reload the network. If you want to know how I did it, you can read through the troubleshooting process [here](/troubleshooting/TS-vmbr2-missing.md) or in the troubleshooting folder at the top.
 
 <br>
 
@@ -355,7 +355,7 @@ I decided to go through the "Wizard" configuration option because it includes al
 
 <br>
 
-### OPNsense VLAN Configuration
+### VLAN10 Configuration
 Now that the "Wizard" configuration is complete, I moved on to configure all the VLANs along with the corresponding firewall rules. Here are the summarized steps of how I did it:<br>
 
 #### VLAN Creation
@@ -447,7 +447,7 @@ Now that the "Wizard" configuration is complete, I moved on to configure all the
 - Head to `Firewall > NAT > Outbound` and set the NAT mode to **Hybrid Outbound NAT rule generation**.  
 - Create a new rule and make sure to fill it out exactly as shown in the screenshots above.
 
-### OPNsense – VLAN Setup Test
+### VLAN Setup Test
 To verify that our VLAN configurations were successful, I ran a series of commands and performed several checks to ensure everything was working as intended. These tests helped confirm that the firewall rules, IP assignments, and network segmentation were all functioning properly.<br>
 
 ```
@@ -483,6 +483,17 @@ Here is the breakdown of every test I have performed to verify the configuration
 - Attempting to access the OPNsense Web GUI **fails as expected** – access from VLAN10 is restricted by firewall rules to prevent potential compromise.
 
 <br>
+
+## Summarized VLAN Configuration for All Remaining VLANs
+As shown in the title, I won’t be documenting this step thoroughly, since the principle is the same as with the testing VLAN. Instead, I’ll outline the key steps I took for each VLAN and briefly explain its purpose.<br>
+
+
+1. **Omni-Administrator – VLAN 77**
+
+2. **Container Environment – VLAN 20**
+
+3. **Hacking Environment – VLAN 1**
+
 
 
 
