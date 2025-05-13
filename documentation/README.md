@@ -487,12 +487,13 @@ Here is the breakdown of every test I have performed to verify the configuration
 ## Summarized VLAN Configuration for All Remaining VLANs
 As shown in the title, I won’t be documenting this step thoroughly, since the principle is the same as with the testing VLAN. Instead, I’ll outline the key steps I took for each VLAN and briefly explain its purpose.<br>
 
+1. **VLAN 20 and VLAN 1**
+I followed the same principle for the rules of the Container and Hacking VLANs. These VLANs must have access to the internet but are not allowed to access the firewall itself. The reason for this is that it would be an unnecessary security risk to allow them access to the firewall.
 
-1. **Omni-Administrator – VLAN 77**
+2. **VLAN 77**
+For the Omni-Administrative VLAN, I allowed internet access, but contrary to the others, I also allowed it to access the firewall. The reason being that since this is an admin VLAN, it should have access for configurations, troubleshooting, updates, monitoring, etc.
 
-2. **Container Environment – VLAN 20**
 
-3. **Hacking Environment – VLAN 1**
 
 
 
