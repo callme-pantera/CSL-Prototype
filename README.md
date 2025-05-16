@@ -70,6 +70,7 @@ A summary of the entire project's contents:
 - [The Main Project Documentation](documentation/README.md)
   - [VLAN77 - OmniVM Tuning](documentation/77-KL-OmniVM-tuning.md)
 
+<br>
 
 - [Troubleshooting 1.1 - Proxmox / Laptop issue](troubleshooting/TS-proxmox-laptop-issue.md)
 - [Troubleshooting 1.2 - Linux Bridge missing](troubleshooting/TS-vmbr2-missing.md)
