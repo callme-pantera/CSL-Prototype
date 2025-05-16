@@ -44,7 +44,7 @@ These are some of the points I wanted to include in my Cybersecurity Lab:
 - Kali Linux
 - Firewall / monitoring tools
 - Private network for protection from external threats
-  - VLANs
+- VLANs
 - 
 
 <br>
