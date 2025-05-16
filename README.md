@@ -23,7 +23,7 @@ In this project, I will document the process of creating a **C**yber**s**ecurity
 This is not a tutorial or guide, just a documentation of my work and progress, the way I approach it.
 I want to mention that you don’t have to follow every step exactly as I did. I’ll be documenting everything, including some details that may not be strictly necessary.
 <br><br>
-The documentation for the entire project can be found [here](/documentation/README.md) or in the **documentation** folder at the top of the page. Additionally, if you would like to read through and understand my troubleshooting process, you can find it [here](/troubleshooting/TS-proxmox-laptop-issue.md) or in the **troubleshooting** folder at the top of the page as well.
+The documentation for the entire project can be found [here](/documentation/README.md) or in the **documentation** folder at the top of the page. Additionally, if you would like to read through and understand my troubleshooting processes, you can find them in the **troubleshooting** folder at the top of the page as well.
 
 
 <br>
@@ -38,14 +38,12 @@ Before starting, I created a prototype of the network plan using [Draw.io](https
 
 These are some of the points I wanted to include in my Cybersecurity Lab:
 
-- Containers
-- VMs
-- Testing Environment
+- Containers  
+- Testing environment  
+- Firewall and monitoring tools  
+- Private network for protection against external threats  
+- VLANs  
 - Kali Linux
-- Firewall / monitoring tools
-- Private network for protection from external threats
-- VLANs
-- 
 
 <br>
 
@@ -65,6 +63,22 @@ Throughout this project, I will be adding to and adjusting my documentation as n
 
 
 <br>
+
+# Summarization
+A summary of the entire project's contents:
+
+- [The Main Project Documentation](documentation/README.md)
+  - [VLAN77 - OmniVM Tuning](documentation/77-KL-OmniVM-tuning.md)
+
+
+- [Troubleshooting 1.1 - Proxmox / Laptop issue](troubleshooting/TS-proxmox-laptop-issue.md)
+- [Troubleshooting 1.2 - Linux Bridge missing](troubleshooting/TS-vmbr2-missing.md)
+- [Troubleshooting 1.3 - WireGuard-VPN issue](troubleshooting/TS-WireGuard-VPN-for-VM.md)
+
+
+
+<br>
+
 
 # Sources
 
