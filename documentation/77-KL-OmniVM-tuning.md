@@ -1,4 +1,4 @@
-# VLAN77 - Advanced Tuning of the Kali Linux Omni-VM
+# VLAN77 - Tuning of the Kali Linux Omni-VM
 
 In this documentation, I will document the process of advanced enhancing and hardening of the Kali Linux Omni-VM. This is not a tutorial, as mentioned before, but rather a reflection of my thought process and results.
 
@@ -101,11 +101,56 @@ Even though we installed and configured Fail2Ban in the script, I wanted to writ
 $ sudo apt install fail2ban -y
 ```
 
+<br>
+
+## QEMU Guest Agent for Proxmox
+Why QEMU Guest Agent? The QEMU Guest Agent gives Proxmox live insight into the guest OS, including:
+
+- IP addresses (seen in the Proxmox GUI)
+- Shutdown/reboot from the Proxmox interface
+- Live memory/disk usage (when integrated)
+
+Eventhough Proxmox has these kinds of options, it's much more smoother with the QEMU Agent than the default Proxmox GUI. A good YouTube video that explains this tool and the issues with Proxmox can be found [here](https://youtu.be/wp4kCUM6dik?feature=shared). The YouTuber explains it very well and provides a more detailed installation and explanation process than I do.<br>
+
+1. Install the Agent.
+2. Enable the service.
+3. Configure Qemu in Proxmox GUI
+   1. `OmniVM > Options`
+   2. Edit QEMU Guest Agent
+   3. Set to: `Use QEMU Guest Agent: Yes`
+   4. Shutdown the VM, if you didn't already
+4. In Proxmox Web UI, go to: `OmniVM → Hardware tab`
+   1. Click Add → `Serial Port`
+   2. Set: `Port: 0 (or leave default)` 
+   3. **Do not change anything else**. Click Add
+5. Start the VM again
+6. Start the servie
+7. Verify if it's running.
+
+```
+$ sudo apt update
+$ sudo apt install qemu-guest-agent -y
+$ sudo systemctl enable qemu-guest-agent
+```
+```
+$ sudo systemctl start qemu-guest-agent
+$ systemctl status qemu-guest-agent
+```
 
 <div>
-    <img src="" style="width: 100%;">
-    <img src="" style="width: 100%;">
-    <img src="" style="width: 100%;">
-    <img src="" style="width: 100%;">
-    <img src="" style="width: 100%;">
+    <img src="/assets/images/77-KL-OmniVM_QEMU-Guest-Agent-Setup.png" style="width: 100%;">
+    <img src="/assets/images/77-KL-OmniVM_QEMU-Guest-Agent-Basic-Commands.png" style="width: 100%;">
 </div>
+
+<br>
+
+***I won’t be explaining in detail what these commands do and how they work, but they are very useful and handy. The video linked above provides a thorough explanation.***
+
+
+<br>
+
+
+# Sources
+
+- [ChatGPT](chatgpt.com)
+- [QEMU Guest Agent - Comprehensive Breakdown](https://youtu.be/wp4kCUM6dik?feature=shared)
