@@ -18,7 +18,9 @@
 <br>
 
 # Installation and Configuration
-Before I actually began the project, I wanted to install and configure all the necessary software, ISO files, etc., so that everything was ready for the CSL. The goal was to prepare everything in advance and save time during the different stages of the project.<br>
+Before I actually began the project, I wanted to install and configure all the necessary software, ISO files, etc., so that everything was ready for the CSL. The goal was to prepare everything in advance and save time during the different stages of the project.
+
+<br>
 
 ## Proxmox
 For the Proxmox installation and configuration, I used the [documentation](https://www.proxmox.com/en/proxmox-virtual-environment/get-started) provided by Proxmox themselves and followed it step by step. Keep in mind to read carefully and not just click through—take the time to understand each step.
@@ -491,6 +493,7 @@ For the Omni-Administrative VLAN, I allowed internet access, but contrary to the
 
 <br>
 
+## Container Environment
 
 
 

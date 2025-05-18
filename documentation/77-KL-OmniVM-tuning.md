@@ -127,6 +127,8 @@ Eventhough Proxmox has these kinds of options, it's much more smoother with the 
 6. Start the servie
 7. Verify if it's running.
 
+<br>
+
 ```
 $ sudo apt update
 $ sudo apt install qemu-guest-agent -y
@@ -144,7 +146,7 @@ $ systemctl status qemu-guest-agent
 
 <br>
 
-***I won’t be explaining in detail what these commands do and how they work, but they are very useful and handy. The video linked above provides a thorough explanation.***
+***I won’t be explaining in detail what these commands do and how they work, but they are very useful and handy. The video linked above and below provides a thorough explanation.***
 
 
 <br>
