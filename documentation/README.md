@@ -18,7 +18,7 @@
 <br>
 
 # Installation and Configuration
-Before I actually began the project, I wanted to install and configure all the necessary software, ISO files, etc., so that everything was ready for the CSL. The goal was to prepare everything in advance and save time during the different stages of the project.
+Before I actually began the project, I wanted to install and configure all the necessary software, ISO files, etc., so that everything was ready for the CSL. The goal was to prepare everything in advance and save time during the different stages of the project.<br>
 
 ## Proxmox
 For the Proxmox installation and configuration, I used the [documentation](https://www.proxmox.com/en/proxmox-virtual-environment/get-started) provided by Proxmox themselves and followed it step by step. Keep in mind to read carefully and not just click through—take the time to understand each step.
@@ -61,9 +61,8 @@ You should be able to install it on your own, as the documentation is quite clea
 
 <br>
 
-I proceeded with the installation and setup of Proxmox on my Acer laptop but encountered several issues. When I attempted to apply the configurations I had made, an error kept occurring despite my various attempts to fix it. The root of the problem was that the Proxmox installer had difficulties with the laptop's partition. I tried multiple solutions, but unfortunately, none were successful.
-
-To keep a long story short, the real reason Proxmox had issues with my laptop’s partition was that the eMMC storage was damaged or faulty. That said, even if it hadn’t been damaged, it still wouldn’t have worked—because **Proxmox doesn’t support eMMC storage.**
+I proceeded with the installation and setup of Proxmox on my Acer laptop but encountered several issues. When I attempted to apply the configurations I had made, an error kept occurring despite my various attempts to fix it. The root of the problem was that the Proxmox installer had difficulties with the laptop's partition. I tried multiple solutions, but unfortunately, none were successful.<br>
+To keep a long story short, the real reason Proxmox had issues with my laptop’s partition was that the eMMC storage was damaged or faulty. That said, even if it hadn’t been damaged, it still wouldn’t have worked—because **Proxmox doesn’t support eMMC storage.**<br>
 
 If you’d like to read through my troubleshooting process, you can find all the documentation in the ***troubleshooting folder*** or [here](/troubleshooting/TS-proxmox-laptop-issue.md).
 
@@ -90,7 +89,6 @@ If your system allows you to configure **IPMI**, I sincerely recommend doing so�
 <br>
 
 ### IPMI Configuration
-
 After configuring the BIOS boot order on the server, I also wanted to check whether IPMI was enabled and functioning—and in my case, it was. However, I had to configure the station IP address, subnet mask, gateway, etc., since it wasn’t adapted to my router / ISP settings.
 
 <br>
@@ -100,7 +98,7 @@ After configuring the BIOS boot order on the server, I also wanted to check whet
 
 <br>
 
-**IPMI**, short for **I**ntelligent **P**latform **M**anagement **I**nterface, is a standardized interface used for out-of-band management of servers. It allows administrators to monitor, manage, and troubleshoot a system independently of the operating system, and even when the server is powered off, as long as it's connected to power and the network.
+**IPMI**, short for **I**ntelligent **P**latform **M**anagement **I**nterface, is a standardized interface used for out-of-band management of servers. It allows administrators to monitor, manage, and troubleshoot a system independently of the operating system, and even when the server is powered off, as long as it's connected to power and the network.<br>
 
 When **IPMI** is enabled, I can access the server remotely through a dedicated management interface—often via a web-based dashboard or console—regardless of the server’s current state. This makes it possible to perform tasks like system reboots, BIOS configuration, or OS installations without needing physical access to the machine. It’s an incredibly useful and powerful feature, especially for server maintenance and remote administration!<br>
 Most of the time, the IPMI LAN port is located separately from the other LAN ports. In my case, the IPMI port is isolated from the four regular LAN ports and positioned on the far left.
@@ -108,7 +106,6 @@ Most of the time, the IPMI LAN port is located separately from the other LAN por
 <br>
 
 ### Proxmox and IPMI Dashboards
-
 Again after the reboot, leave the USB drive plugged in and wait for the Proxmox installation process to start. Once it appears, choose the **Graphical Install**, as it is more user-friendly.
 
 - Select the target hard disk: `/dev/sda`  
@@ -265,7 +262,6 @@ $ chmod +x /xyz/nat-uninstall.sh
 <br>
 
 ### Firewall VM Installation and Configuration
-
 After the successful **NAT** configuration for *vmbr2*, I started the VM and proceeded with the OPNsense installation. Unfortunately, after starting the VM, it crashed with an error stating that the *vmbr2* bridge does not exist. I verified this, and indeed, the bridge was missing because the section for *vmbr2* was completely absent from the `/etc/network/interfaces` file. I had to manually add the configuration and reload the network. If you want to know how I did it, you can read through the troubleshooting process [here](/troubleshooting/TS-vmbr2-missing.md) or in the troubleshooting folder at the top.
 
 <br>
@@ -484,14 +480,18 @@ Here is the breakdown of every test I have performed to verify the configuration
 
 <br>
 
-## Summarized VLAN Configuration for All Remaining VLANs
+### Summarized VLAN Configuration for All Remaining VLANs
 As shown in the title, I won’t be documenting this step thoroughly, since the principle is the same as with the testing VLAN. Instead, I’ll outline the key steps I took for each VLAN and briefly explain its purpose.<br>
 
-1. **VLAN 20 and VLAN 1**
+1. **VLAN 20 and VLAN 1**<br>
 I followed the same principle for the rules of the Container and Hacking VLANs. These VLANs must have access to the internet but are not allowed to access the firewall itself. The reason for this is that it would be an unnecessary security risk to allow them access to the firewall.
 
-2. **VLAN 77**
+2. **VLAN 77**<br>
 For the Omni-Administrative VLAN, I allowed internet access, but contrary to the others, I also allowed it to access the firewall. The reason being that since this is an admin VLAN, it should have access for configurations, troubleshooting, updates, monitoring, etc.
+
+<br>
+
+
 
 
 
