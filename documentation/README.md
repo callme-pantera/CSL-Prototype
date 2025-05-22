@@ -493,7 +493,190 @@ For the Omni-Administrative VLAN, I allowed internet access, but contrary to the
 
 <br>
 
-## Container Environment
+## Container Environment - VLAN20
+As the foundational step of this project, I deployed an Ubuntu Server to serve as the base system for my Docker host. I deliberately chose Ubuntu due to its stability, widespread adoption, and extensive documentation—making it an ideal candidate for server-based workloads and long-term maintainability.<br>
+
+For containerization, I opted for Docker. This decision was based on my existing experience and proficiency with Docker’s architecture, CLI tooling, and operational best practices. Leveraging a platform I'm already familiar with allows me to build and iterate on the project efficiently, without the overhead of learning a new container ecosystem from scratch.<br>
+
+During the installation, I manually configured the IP address and network settings. This was done intentionally to ensure a consistent and predictable network environment within my CSL. Static addressing gives me full control over routing, VLAN mapping, and access control—critical for simulating real-world cybersecurity infrastructure.
+
+<br>
+
+<div>
+  <img src="/assets/images/edit-ip4-ubunut-server.png" style="width:100%";>
+</div>
+
+<br>
+
+After successfully installing and configuring the system, I proceeded with the Docker setup. However, before that, I went through the following chapter. You don’t have to do this, it’s optional, and you can skip it if you prefer to continue directly.
+
+<br>
+
+> [!NOTE]
+> The next chapter on VPN configuration is **NOT** necessary. I chose to include it because it made sense to me personally, and I had always wanted to try it out.
+
+<br>
+
+### Remote SSH Access to VLAN-Tagged VMs and Server Resources via WireGuard VPN
+
+#### Goal
+Access a VM running in **VLAN20** via **SSH** from a remote client connected through a **ISP-generated WireGuard VPN**.
+The remote client has **no access to the VPN server configuration** and receives a **/32 IP** from my ISP.
+
+<br>
+
+#### Infrastructure Summary
+
+| Component         | Detail                                  |
+| ----------------- | --------------------------------------- |
+| VPN Client        | Receives IP: `x.x.x.x/32` (no gateway)  |
+| Proxmox Host      | Manages networking + NAT                |
+| VM                | Ubuntu Server `x.x.x.x/24`, VLAN20      |
+| Bridge Used       | `vmbr20` with IP `x.x.x.x`              |
+| Interface Tagging | VLAN Tag `20` used on `eno1.20`         |
+| Proxmox IP (LAN)  | `x.x.x.x`                               |
+
+<br>
+
+#### Key Concepts
+* The WireGuard VPN tunnel is **fully controlled by my ISP**, no changes can be made on the server side.
+* The VPN client is isolated (`/32` subnet, no gateway).
+* To **bridge this limitation**, Proxmox acts as a **NAT Gateway** and optionally as a **SSH proxy** via **port forwarding**.
+* Proxmox interface `vmbr20` handles VLAN20 and must have the **default gateway IP of the VM**.
+
+<br>
+
+> [!NOTE]
+> As you’ve probably noticed, I’ve purposefully censored certain technical details. This isn’t a tutorial anyway (*as mentioned on the first page*), so I’m sure you’ll understand.
+
+<br>
+
+#### 1. Configure `vmbr20` on Proxmox (VLAN20)
+In Proxmox UI or via `/etc/network/interfaces`:
+
+```bash
+auto vmbr20
+iface vmbr20 inet static
+    address x.x.x.x/24
+    bridge_ports eno1.20
+    bridge_stp off
+    bridge_fd 0
+```
+
+Ensure:
+
+* `eno1.20` exists as a VLAN subinterface or use `bridge-vlan-aware` on `vmbr1` as alternative.
+* Apply config or reboot host.
+
+#### 2. Ubuntu VM Network (Manual or Netplan)
+Inside `x.x.x.x` (Ubuntu Server VM):
+
+```bash
+ip addr add x.x.x.x/24 dev ens18
+ip route add default via x.x.x.x
+```
+
+Or via Netplan (`/etc/netplan/01-netcfg.yaml`):
+
+```yaml
+network:
+  version: 2
+  ethernets:
+    ens18:
+      dhcp4: no
+      addresses:
+        - y.y.y.y/24
+      gateway4: y.y.y.y
+```
+
+Then apply:
+
+```bash
+sudo netplan apply
+```
+
+#### 3. Enable SSH on the VM
+Ensure:
+
+```bash
+sudo systemctl enable ssh
+sudo systemctl start ssh
+```
+
+Check:
+
+```bash
+sudo ss -tnlp | grep :22
+```
+
+#### 4. Enable NAT on Proxmox Host
+This step allows the VPN client to access the VM even though it has no valid return path (`/32` IP, no gateway).
+
+```bash
+echo 1 > /proc/sys/net/ipv4/ip_forward
+iptables -t nat -A POSTROUTING -s x.x.x.x -j MASQUERADE
+```
+
+> Make it persistent:
+
+```bash
+apt install iptables-persistent -y
+netfilter-persistent save
+```
+
+#### 5. Optional: Add Route to Handle VPN Client
+Not always necessary, but if needed:
+
+```bash
+ip route add x.x.x.x dev vmbr0
+```
+
+#### 6. (Optional) Port Forwarding as Fallback
+If NAT does not work (e.g. WireGuard or ISP blocks return routes), use Proxmox port forwarding:
+
+```bash
+iptables -t nat -A PREROUTING -i vmbr0 -p tcp --dport xxxx -j DNAT --to-destination x.x.x.x:22
+iptables -A FORWARD -p tcp -d x.x.x.x --dport 22 -j ACCEPT
+```
+
+Then SSH from VPN client via:
+
+```bash
+ssh -p xxxx user@x.x.x.x
+```
+
+#### 7. Test SSH Access from VPN Client
+Ensure you're connected to WireGuard. Then:
+
+```bash
+ssh user@x.x.x.x      # If NAT works
+ssh -p xxxx user@x.x.x.x  # If using port forwarding
+```
+
+#### Final Checklist
+* [x] VM is reachable from Proxmox
+* [x] SSH server is active on the VM
+* [x] Gateway (`x.x.x.x`) is reachable and responds to ARP
+* [x] NAT or Port forwarding is active
+* [x] VPN client IP (`x.x.x.x`) is known to Proxmox
+* [x] SSH access from VPN is working
+
+<br>
+
+### Tip: Secure the VM
+Once access is stable:
+
+```bash
+adduser newuser
+usermod -aG sudo newuser
+su - newuser
+ssh-keygen
+sudo nano /etc/ssh/sshd_config
+# Set:
+PermitRootLogin no
+PasswordAuthentication no
+sudo systemctl restart ssh
+```
 
 
 
