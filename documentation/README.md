@@ -572,8 +572,8 @@ Ensure:
 Inside `x.x.x.x` (Ubuntu Server VM):
 
 ```bash
-ip addr add x.x.x.x/24 dev ens18
-ip route add default via x.x.x.x
+$ ip addr add x.x.x.x/24 dev ens18
+$ ip route add default via x.x.x.x
 ```
 
 Or via Netplan (`/etc/netplan/01-netcfg.yaml`):
@@ -592,65 +592,65 @@ network:
 Then apply:
 
 ```bash
-sudo netplan apply
+$ sudo netplan apply
 ```
 
 #### 3. Enable SSH on the VM
 Ensure:
 
 ```bash
-sudo systemctl enable ssh
-sudo systemctl start ssh
+$ sudo systemctl enable ssh
+$ sudo systemctl start ssh
 ```
 
 Check:
 
 ```bash
-sudo ss -tnlp | grep :22
+$ sudo ss -tnlp | grep :22
 ```
 
 #### 4. Enable NAT on Proxmox Host
 This step allows the VPN client to access the VM even though it has no valid return path (`/32` IP, no gateway).
 
 ```bash
-echo 1 > /proc/sys/net/ipv4/ip_forward
-iptables -t nat -A POSTROUTING -s x.x.x.x -j MASQUERADE
+$ echo 1 > /proc/sys/net/ipv4/ip_forward
+$ iptables -t nat -A POSTROUTING -s x.x.x.x -j MASQUERADE
 ```
 
 > Make it persistent:
 
 ```bash
-apt install iptables-persistent -y
-netfilter-persistent save
+$ apt install iptables-persistent -y
+$ netfilter-persistent save
 ```
 
 #### 5. Optional: Add Route to Handle VPN Client
 Not always necessary, but if needed:
 
 ```bash
-ip route add x.x.x.x dev vmbr0
+$ ip route add x.x.x.x dev vmbr0
 ```
 
 #### 6. (Optional) Port Forwarding as Fallback
 If NAT does not work (e.g. WireGuard or ISP blocks return routes), use Proxmox port forwarding:
 
 ```bash
-iptables -t nat -A PREROUTING -i vmbr0 -p tcp --dport xxxx -j DNAT --to-destination x.x.x.x:22
-iptables -A FORWARD -p tcp -d x.x.x.x --dport 22 -j ACCEPT
+$ iptables -t nat -A PREROUTING -i vmbr0 -p tcp --dport xxxx -j DNAT --to-destination x.x.x.x:22
+$ iptables -A FORWARD -p tcp -d x.x.x.x --dport 22 -j ACCEPT
 ```
 
 Then SSH from VPN client via:
 
 ```bash
-ssh -p xxxx user@x.x.x.x
+$ssh -p xxxx user@x.x.x.x
 ```
 
 #### 7. Test SSH Access from VPN Client
 Ensure you're connected to WireGuard. Then:
 
 ```bash
-ssh user@x.x.x.x      # If NAT works
-ssh -p xxxx user@x.x.x.x  # If using port forwarding
+$ ssh user@x.x.x.x      # If NAT works
+$ ssh -p xxxx user@x.x.x.x  # If using port forwarding
 ```
 
 #### Final Checklist
@@ -663,24 +663,164 @@ ssh -p xxxx user@x.x.x.x  # If using port forwarding
 
 <br>
 
-### Tip: Secure the VM
-Once access is stable:
+#### Tip: Secure the VM and Proxmox
+Once access is stable, go to the main Proxmox shell and type the following commands:<br>
 
 ```bash
-adduser newuser
-usermod -aG sudo newuser
-su - newuser
-ssh-keygen
-sudo nano /etc/ssh/sshd_config
+$ apt update
+$ apt install sudo -y
+$ adduser newuser
+$ usermod -aG sudo newuser
+```
+
+After that, you should be able to log in as the new user via SSH and have sudo privileges. Once this is confirmed, disable the option to log in as root via SSH in the Proxmox shell.<br>
+
+```bash
+$ sudo nano /etc/ssh/sshd_config
 # Set:
 PermitRootLogin no
 PasswordAuthentication no
-sudo systemctl restart ssh
+$ sudo systemctl restart ssh
 ```
 
+<br>
 
+### Docker Container Environment Installation
+This chapter includes installing a secure, up-to-date version of Docker Engine, Docker CLI, containerd, and the Docker Compose plugin on Ubuntu Server.<br>
 
+#### Install prerequisites and keyring directory
 
+```bash
+$ sudo apt install ca-certificates curl gnupg -y
+$ sudo install -m 0755 -d /etc/apt/keyrings
+```
+
+**Why?**
+
+* `ca-certificates`: Required to validate HTTPS connections securely
+* `curl`: Downloads files from HTTPS sources (used later for Docker GPG key)
+* `gnupg`: Used to verify package authenticity
+* `/etc/apt/keyrings`: A modern and secure place to store third-party GPG keys
+
+<br>
+
+#### Add Docker’s official GPG key
+
+```bash
+$ curl -fsSL https://download.docker.com/linux/ubuntu/gpg | \
+sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
+```
+
+**Why?**
+
+* Ensures all Docker packages you install are **signed and verified** by Docker Inc.
+* Prevents installation of **tampered or malicious packages**.
+
+<br>
+
+#### Add the Docker APT repository
+
+```bash
+echo \
+"deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] \
+https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" | \
+sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+```
+
+**Why?**
+
+* Adds the official Docker repository to your system.
+* Ensures that Docker-related packages are always pulled from a **trusted and up-to-date source**.
+
+<br>
+
+#### Update APT and install Docker
+
+```bash
+$ sudo apt update
+$ sudo apt install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin -y
+```
+
+**Why install these components?**
+
+| Package                 | Purpose                                                             |
+| ----------------------- | ------------------------------------------------------------------- |
+| `docker-ce`             | Docker Engine (daemon + runtime)                                    |
+| `docker-ce-cli`         | Command-line interface                                              |
+| `containerd.io`         | High-performance container runtime                                  |
+| `docker-buildx-plugin`  | Extended build support (multi-arch, caching, etc.)                  |
+| `docker-compose-plugin` | Native Compose v2 support (replaces legacy `docker-compose` binary) |
+
+<br>
+
+#### Enable Docker usage without `sudo`
+
+```bash
+$ sudo usermod -aG docker $USER
+```
+
+**Why?**
+
+* Adds your current user to the `docker` group.
+* This allows you to run Docker commands **without needing `sudo`** every time.
+
+> [!NOTE]
+> Requires re-login to take effect (see next step).
+
+<br>
+
+#### Apply new group permissions
+
+```bash
+$ newgrp docker
+```
+
+Or log out and back in again.
+
+**Why?**
+
+* Linux only applies group membership changes at login.
+* Without this, you’ll still get permission errors when using `docker`.
+
+<br>
+
+#### Test the installation
+
+```bash
+$ docker run hello-world
+```
+
+**What it does:**
+
+* Downloads and runs a test container from Docker Hub.
+* Confirms that Docker Engine and networking work as expected.
+
+You should see a message like:
+
+<div>
+  <img src="/assets/images/docker-success-hello-docker.png" style="width: 100%";>
+</div>
+
+<br>
+
+#### Enable Docker at boot
+
+```bash
+$ sudo systemctl enable docker
+```
+
+Ensures Docker starts automatically with the system.
+
+<br>
+
+```bash
+$ docker --version
+$ docker compose version
+```
+
+Verifies that both the CLI and Compose are installed correctly.
+
+<br>
 
 
 
