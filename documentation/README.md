@@ -519,13 +519,10 @@ After successfully installing and configuring the system, I proceeded with the D
 
 ### Remote SSH Access to VLAN-Tagged VMs and Server Resources via WireGuard VPN
 
-#### Goal
-Access a VM running in **VLAN20** via **SSH** from a remote client connected through a **ISP-generated WireGuard VPN**.
+The goal is to access a VM running in **VLAN20** via **SSH** from a remote client connected through a **ISP-generated WireGuard VPN**.
 The remote client has **no access to the VPN server configuration** and receives a **/32 IP** from my ISP.
 
 <br>
-
-#### Infrastructure Summary
 
 | Component         | Detail                                  |
 | ----------------- | --------------------------------------- |
@@ -538,11 +535,10 @@ The remote client has **no access to the VPN server configuration** and receives
 
 <br>
 
-#### Key Concepts
-* The WireGuard VPN tunnel is **fully controlled by my ISP**, no changes can be made on the server side.
-* The VPN client is isolated (`/32` subnet, no gateway).
-* To **bridge this limitation**, Proxmox acts as a **NAT Gateway** and optionally as a **SSH proxy** via **port forwarding**.
-* Proxmox interface `vmbr20` handles VLAN20 and must have the **default gateway IP of the VM**.
+- The WireGuard VPN tunnel is **fully controlled by my ISP**, no changes can be made on the server side.
+- The VPN client is isolated (`/32` subnet, no gateway).
+- To **bridge this limitation**, Proxmox acts as a **NAT Gateway** and optionally as a **SSH proxy** via **port forwarding**.
+- Proxmox interface `vmbr20` handles VLAN20 and must have the **default gateway IP of the VM**.
 
 <br>
 
@@ -551,7 +547,7 @@ The remote client has **no access to the VPN server configuration** and receives
 
 <br>
 
-#### 1. Configure `vmbr20` on Proxmox (VLAN20)
+#### Configure `vmbr20` on Proxmox (VLAN20)
 In Proxmox UI or via `/etc/network/interfaces`:
 
 ```bash
@@ -568,7 +564,7 @@ Ensure:
 * `eno1.20` exists as a VLAN subinterface or use `bridge-vlan-aware` on `vmbr1` as alternative.
 * Apply config or reboot host.
 
-#### 2. Ubuntu VM Network (Manual or Netplan)
+#### Ubuntu VM Network (Manual or Netplan)
 Inside `x.x.x.x` (Ubuntu Server VM):
 
 ```bash
@@ -595,7 +591,7 @@ Then apply:
 $ sudo netplan apply
 ```
 
-#### 3. Enable SSH on the VM
+#### Enable SSH on the VM
 Ensure:
 
 ```bash
@@ -609,7 +605,7 @@ Check:
 $ sudo ss -tnlp | grep :22
 ```
 
-#### 4. Enable NAT on Proxmox Host
+#### Enable NAT on Proxmox Host
 This step allows the VPN client to access the VM even though it has no valid return path (`/32` IP, no gateway).
 
 ```bash
@@ -624,14 +620,14 @@ $ apt install iptables-persistent -y
 $ netfilter-persistent save
 ```
 
-#### 5. Optional: Add Route to Handle VPN Client
+#### Optional: Add Route to Handle VPN Client
 Not always necessary, but if needed:
 
 ```bash
 $ ip route add x.x.x.x dev vmbr0
 ```
 
-#### 6. (Optional) Port Forwarding as Fallback
+#### Optional: Port Forwarding as Fallback
 If NAT does not work (e.g. WireGuard or ISP blocks return routes), use Proxmox port forwarding:
 
 ```bash
@@ -645,21 +641,13 @@ Then SSH from VPN client via:
 $ssh -p xxxx user@x.x.x.x
 ```
 
-#### 7. Test SSH Access from VPN Client
+#### Test SSH Access from VPN Client
 Ensure you're connected to WireGuard. Then:
 
 ```bash
 $ ssh user@x.x.x.x      # If NAT works
 $ ssh -p xxxx user@x.x.x.x  # If using port forwarding
 ```
-
-#### Final Checklist
-* [x] VM is reachable from Proxmox
-* [x] SSH server is active on the VM
-* [x] Gateway (`x.x.x.x`) is reachable and responds to ARP
-* [x] NAT or Port forwarding is active
-* [x] VPN client IP (`x.x.x.x`) is known to Proxmox
-* [x] SSH access from VPN is working
 
 <br>
 
@@ -695,8 +683,6 @@ $ sudo apt install ca-certificates curl gnupg -y
 $ sudo install -m 0755 -d /etc/apt/keyrings
 ```
 
-**Why?**
-
 * `ca-certificates`: Required to validate HTTPS connections securely
 * `curl`: Downloads files from HTTPS sources (used later for Docker GPG key)
 * `gnupg`: Used to verify package authenticity
@@ -711,8 +697,6 @@ $ curl -fsSL https://download.docker.com/linux/ubuntu/gpg | \
 sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
 ```
 
-**Why?**
-
 * Ensures all Docker packages you install are **signed and verified** by Docker Inc.
 * Prevents installation of **tampered or malicious packages**.
 
@@ -726,8 +710,6 @@ echo \
 https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" | \
 sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
 ```
-
-**Why?**
 
 * Adds the official Docker repository to your system.
 * Ensures that Docker-related packages are always pulled from a **trusted and up-to-date source**.
@@ -759,8 +741,6 @@ $ sudo apt install docker-ce docker-ce-cli containerd.io docker-buildx-plugin do
 $ sudo usermod -aG docker $USER
 ```
 
-**Why?**
-
 * Adds your current user to the `docker` group.
 * This allows you to run Docker commands **without needing `sudo`** every time.
 
@@ -776,8 +756,6 @@ $ newgrp docker
 ```
 
 Or log out and back in again.
-
-**Why?**
 
 * Linux only applies group membership changes at login.
 * Without this, you’ll still get permission errors when using `docker`.
